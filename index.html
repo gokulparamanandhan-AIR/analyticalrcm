@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Analytical RCM | Gokul Paramanandhan</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Syne:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --cyan: #00f5ff;
+      --blue: #0066ff;
+      --violet: #7b2fff;
+      --glass-bg: rgba(255,255,255,0.04);
+      --glass-border: rgba(0,245,255,0.15);
+      --glass-hover: rgba(0,245,255,0.08);
+      --text-primary: #f0f8ff;
+      --text-muted: rgba(180,220,255,0.65);
+      --glow: 0 0 30px rgba(0,245,255,0.25);
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Syne', sans-serif;
+      background: #010814;
+      color: var(--text-primary);
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* Custom cursor */
+    .cursor {
+      position: fixed;
+      width: 12px; height: 12px;
+      background: var(--cyan);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: transform 0.1s ease;
+      box-shadow: 0 0 15px var(--cyan), 0 0 30px rgba(0,245,255,0.4);
+    }
+    .cursor-ring {
+      position: fixed;
+      width: 36px; height: 36px;
+      border: 1px solid rgba(0,245,255,0.5);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: all 0.15s ease;
+    }
+
+    /* Canvas background */
+    canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* Grid overlay */
+    .grid-overlay {
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,245,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,245,255,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* Ambient glows */
+    .ambient {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(120px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .ambient-1 {
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(0,102,255,0.12), transparent 70%);
+      top: -200px; left: -200px;
+    }
+    .ambient-2 {
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(123,47,255,0.10), transparent 70%);
+      bottom: 100px; right: -150px;
+    }
+    .ambient-3 {
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(0,245,255,0.07), transparent 70%);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    /* Layout */
+    main { position: relative; z-index: 2; }
+
+    section { padding: 100px 0; }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 40px;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 20px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(1,8,20,0.7);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(0,245,255,0.08);
+    }
+
+    .nav-logo {
+      font-family: 'Orbitron', monospace;
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--cyan);
+      letter-spacing: 2px;
+      text-decoration: none;
+      text-shadow: 0 0 20px rgba(0,245,255,0.5);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 40px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      transition: color 0.3s;
+      position: relative;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 0;
+      width: 0; height: 1px;
+      background: var(--cyan);
+      transition: width 0.3s;
+      box-shadow: 0 0 8px var(--cyan);
+    }
+
+    .nav-links a:hover { color: var(--cyan); }
+    .nav-links a:hover::after { width: 100%; }
+
+    /* HERO */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding-top: 100px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-content {
+      max-width: 800px;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      background: rgba(0,245,255,0.06);
+      border: 1px solid rgba(0,245,255,0.2);
+      border-radius: 100px;
+      font-size: 0.7rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 32px;
+      animation: fadeUp 0.8s ease both;
+    }
+
+    .hero-badge .dot {
+      width: 6px; height: 6px;
+      background: var(--cyan);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    .hero-title {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 12px;
+      animation: fadeUp 0.8s 0.1s ease both;
+    }
+
+    .hero-title .line-1 { color: var(--text-primary); }
+    .hero-title .line-2 {
+      background: linear-gradient(90deg, var(--cyan), var(--blue), var(--violet));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      display: block;
+    }
+
+    .hero-name {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(1rem, 2vw, 1.3rem);
+      font-weight: 300;
+      color: var(--text-muted);
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+      animation: fadeUp 0.8s 0.2s ease both;
+    }
+
+    .hero-description {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      line-height: 1.8;
+      max-width: 580px;
+      margin-bottom: 48px;
+      animation: fadeUp 0.8s 0.3s ease both;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 48px;
+      margin-bottom: 48px;
+      animation: fadeUp 0.8s 0.4s ease both;
+    }
+
+    .stat-item {}
+    .stat-number {
+      font-family: 'Orbitron', monospace;
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--cyan);
+      text-shadow: 0 0 20px rgba(0,245,255,0.4);
+    }
+    .stat-label {
+      font-size: 0.7rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      animation: fadeUp 0.8s 0.5s ease both;
+    }
+
+    .btn-primary {
+      padding: 14px 32px;
+      background: linear-gradient(135deg, var(--cyan), var(--blue));
+      border: none;
+      border-radius: 4px;
+      color: #010814;
+      font-family: 'Syne', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-decoration: none;
+      cursor: none;
+      transition: all 0.3s;
+      box-shadow: 0 0 30px rgba(0,245,255,0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 50px rgba(0,245,255,0.5);
+    }
+
+    .btn-ghost {
+      padding: 14px 32px;
+      background: transparent;
+      border: 1px solid rgba(0,245,255,0.3);
+      border-radius: 4px;
+      color: var(--cyan);
+      font-family: 'Syne', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-decoration: none;
+      cursor: none;
+      transition: all 0.3s;
+    }
+
+    .btn-ghost:hover {
+      background: rgba(0,245,255,0.06);
+      border-color: var(--cyan);
+      box-shadow: var(--glow);
+    }
+
+    /* SECTION HEADERS */
+    .section-label {
+      font-size: 0.65rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .section-label::before {
+      content: '';
+      display: block;
+      width: 30px; height: 1px;
+      background: var(--cyan);
+      box-shadow: 0 0 8px var(--cyan);
+    }
+
+    .section-title {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+
+    .section-title span {
+      background: linear-gradient(90deg, var(--cyan), var(--blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .section-subtitle {
+      font-size: 1rem;
+      color: var(--text-muted);
+      line-height: 1.8;
+      max-width: 560px;
+      margin-bottom: 64px;
+    }
+
+    /* GLASS CARD */
+    .glass-card {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      backdrop-filter: blur(20px);
+      transition: all 0.4s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .glass-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(0,245,255,0.03) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .glass-card:hover {
+      border-color: rgba(0,245,255,0.35);
+      background: var(--glass-hover);
+      transform: translateY(-4px);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 40px rgba(0,245,255,0.1);
+    }
+
+    /* SERVICES */
+    #services { background: transparent; }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 24px;
+    }
+
+    .service-card {
+      padding: 36px;
+    }
+
+    .service-icon {
+      width: 52px; height: 52px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, rgba(0,245,255,0.1), rgba(0,102,255,0.1));
+      border: 1px solid rgba(0,245,255,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      margin-bottom: 24px;
+      transition: all 0.3s;
+    }
+
+    .glass-card:hover .service-icon {
+      background: linear-gradient(135deg, rgba(0,245,255,0.2), rgba(0,102,255,0.2));
+      box-shadow: 0 0 20px rgba(0,245,255,0.2);
+    }
+
+    .service-title {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+      letter-spacing: 1px;
+    }
+
+    .service-desc {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.75;
+    }
+
+    .service-tag {
+      display: inline-block;
+      margin-top: 16px;
+      padding: 4px 12px;
+      background: rgba(0,245,255,0.06);
+      border: 1px solid rgba(0,245,255,0.15);
+      border-radius: 100px;
+      font-size: 0.65rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--cyan);
+    }
+
+    /* SPECIALTIES */
+    #specialties { background: transparent; }
+
+    .specialties-wrapper {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: center;
+    }
+
+    .specialties-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .specialty-item {
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .specialty-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--cyan);
+      flex-shrink: 0;
+      box-shadow: 0 0 10px var(--cyan);
+      animation: pulse 2s infinite;
+    }
+
+    .specialty-dot.violet { background: var(--violet); box-shadow: 0 0 10px var(--violet); }
+    .specialty-dot.blue { background: var(--blue); box-shadow: 0 0 10px var(--blue); }
+
+    .specialty-name {
+      font-size: 0.85rem;
+      color: var(--text-primary);
+      font-weight: 500;
+      line-height: 1.4;
+    }
+
+    .specialties-info {
+      padding: 48px;
+    }
+
+    .specialties-info p {
+      font-size: 1rem;
+      color: var(--text-muted);
+      line-height: 1.9;
+      margin-bottom: 24px;
+    }
+
+    .coverage-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .coverage-tag {
+      padding: 6px 14px;
+      background: rgba(123,47,255,0.08);
+      border: 1px solid rgba(123,47,255,0.2);
+      border-radius: 100px;
+      font-size: 0.7rem;
+      letter-spacing: 1px;
+      color: #c4a0ff;
+    }
+
+    /* PROCESS */
+    #process { background: transparent; }
+
+    .process-steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      position: relative;
+    }
+
+    .process-steps::before {
+      content: '';
+      position: absolute;
+      top: 36px;
+      left: 12%;
+      width: 76%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--cyan), var(--blue), var(--violet), transparent);
+      opacity: 0.3;
+    }
+
+    .process-step {
+      padding: 36px 28px;
+      text-align: center;
+    }
+
+    .step-number {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 3px;
+      color: var(--cyan);
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    .step-icon {
+      font-size: 1.8rem;
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    .step-title {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+      letter-spacing: 1px;
+    }
+
+    .step-desc {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    /* CONTACT */
+    #contact { background: transparent; }
+
+    .contact-wrapper {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: start;
+    }
+
+    .contact-info { padding: 48px; }
+
+    .contact-info h3 {
+      font-family: 'Orbitron', monospace;
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: var(--text-primary);
+    }
+
+    .contact-info p {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.8;
+      margin-bottom: 32px;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .contact-icon {
+      width: 44px; height: 44px;
+      background: rgba(0,245,255,0.06);
+      border: 1px solid rgba(0,245,255,0.15);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    .contact-label {
+      font-size: 0.65rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 2px;
+    }
+
+    .contact-value {
+      font-size: 0.9rem;
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    .contact-form-panel { padding: 48px; }
+
+    .form-group { margin-bottom: 20px; }
+
+    .form-label {
+      display: block;
+      font-size: 0.65rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .form-input, .form-textarea {
+      width: 100%;
+      padding: 12px 16px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(0,245,255,0.12);
+      border-radius: 6px;
+      color: var(--text-primary);
+      font-family: 'Syne', sans-serif;
+      font-size: 0.9rem;
+      outline: none;
+      transition: all 0.3s;
+      cursor: none;
+    }
+
+    .form-input:focus, .form-textarea:focus {
+      border-color: rgba(0,245,255,0.4);
+      background: rgba(0,245,255,0.04);
+      box-shadow: 0 0 20px rgba(0,245,255,0.08);
+    }
+
+    .form-textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    .form-submit {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, var(--cyan), var(--blue));
+      border: none;
+      border-radius: 6px;
+      color: #010814;
+      font-family: 'Syne', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: none;
+      transition: all 0.3s;
+      box-shadow: 0 0 30px rgba(0,245,255,0.2);
+    }
+
+    .form-submit:hover {
+      box-shadow: 0 0 50px rgba(0,245,255,0.4);
+      transform: translateY(-1px);
+    }
+
+    /* FOOTER */
+    footer {
+      position: relative;
+      z-index: 2;
+      padding: 40px;
+      border-top: 1px solid rgba(0,245,255,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: gap;
+    }
+
+    .footer-logo {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: var(--cyan);
+      letter-spacing: 2px;
+      text-shadow: 0 0 15px rgba(0,245,255,0.4);
+    }
+
+    .footer-copy {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      letter-spacing: 1px;
+    }
+
+    /* DIVIDER */
+    .section-divider {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(0,245,255,0.15), transparent);
+      margin: 0 auto;
+    }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.8); }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* SCROLLBAR */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: #010814; }
+    ::-webkit-scrollbar-thumb { background: var(--cyan); border-radius: 2px; }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      nav { padding: 16px 20px; }
+      .nav-links { display: none; }
+      .container { padding: 0 20px; }
+      section { padding: 70px 0; }
+      .hero-stats { gap: 28px; }
+      .services-grid { grid-template-columns: 1fr; }
+      .specialties-wrapper { grid-template-columns: 1fr; }
+      .specialties-list { grid-template-columns: 1fr; }
+      .process-steps { grid-template-columns: 1fr 1fr; }
+      .process-steps::before { display: none; }
+      .contact-wrapper { grid-template-columns: 1fr; }
+      footer { flex-direction: column; gap: 12px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+  <canvas id="particles"></canvas>
+  <div class="grid-overlay"></div>
+  <div class="ambient ambient-1"></div>
+  <div class="ambient ambient-2"></div>
+  <div class="ambient ambient-3"></div>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#hero" class="nav-logo">ANALYTICAL RCM</a>
+    <ul class="nav-links">
+      <li><a href="#services">Services</a></li>
+      <li><a href="#specialties">Specialties</a></li>
+      <li><a href="#process">Process</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <main>
+
+    <!-- HERO -->
+    <section id="hero">
+      <div class="container">
+        <div class="hero-content">
+          <div class="hero-badge">
+            <span class="dot"></span>
+            Revenue Cycle Intelligence
+          </div>
+          <h1 class="hero-title">
+            <span class="line-1">Recovering Revenue.</span>
+            <span class="line-2">Eliminating Denials.</span>
+          </h1>
+          <p class="hero-name">Gokul Paramanandhan — RCM Specialist</p>
+          <p class="hero-description">
+            4+ years of deep-domain expertise across inpatient, outpatient, emergency, and specialty care. 
+            I analyze your denied claims, uncover root causes, and deliver data-driven action plans 
+            that turn your AR backlog into recovered revenue.
+          </p>
+          <div class="hero-stats">
+            <div class="stat-item">
+              <div class="stat-number">4+</div>
+              <div class="stat-label">Years Experience</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number">10+</div>
+              <div class="stat-label">Specialties Covered</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number">50+</div>
+              <div class="stat-label">States Served</div>
+            </div>
+          </div>
+          <div class="hero-cta">
+            <a href="#contact" class="btn-primary">Get Free Denial Analysis</a>
+            <a href="#services" class="btn-ghost">View Services</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- SERVICES -->
+    <section id="services">
+      <div class="container">
+        <div class="reveal">
+          <p class="section-label">What I Do</p>
+          <h2 class="section-title">Core <span>Services</span></h2>
+          <p class="section-subtitle">End-to-end revenue cycle solutions tailored for small clinics to large hospital systems across the United States.</p>
+        </div>
+        <div class="services-grid">
+
+          <div class="glass-card service-card reveal">
+            <div class="service-icon">📊</div>
+            <h3 class="service-title">Denial Analysis & Reporting</h3>
+            <p class="service-desc">Deep-dive Excel and Power BI analysis to identify which payers, CPT codes, and diagnosis codes are driving your denials — and exactly why. Delivered as actionable visual reports.</p>
+            <span class="service-tag">Power BI · Excel · Pivot Analysis</span>
+          </div>
+
+          <div class="glass-card service-card reveal">
+            <div class="service-icon">🔄</div>
+            <h3 class="service-title">AR Recovery & Management</h3>
+            <p class="service-desc">Systematic accounts receivable analysis to segregate on-track vs off-track claims, reduce AR days, and recover outstanding payments from insurance carriers.</p>
+            <span class="service-tag">AR Days · Aging Reports · Follow-up</span>
+          </div>
+
+          <div class="glass-card service-card reveal">
+            <div class="service-icon">🛡️</div>
+            <h3 class="service-title">Denial Prevention Strategy</h3>
+            <p class="service-desc">Root cause analysis of denial patterns to fix upstream issues — eligibility verification failures, pre-authorization gaps, coding errors — before they become denials.</p>
+            <span class="service-tag">Root Cause · Prevention · Workflow</span>
+          </div>
+
+          <div class="glass-card service-card reveal">
+            <div class="service-icon">✅</div>
+            <h3 class="service-title">Eligibility Verification Audit</h3>
+            <p class="service-desc">Audit your pre-registration and front-end team's eligibility verification process. Identify staffing gaps and build a structured workflow to prevent eligibility-related denials.</p>
+            <span class="service-tag">Eligibility · Pre-Auth · Front-End</span>
+          </div>
+
+          <div class="glass-card service-card reveal">
+            <div class="service-icon">📋</div>
+            <h3 class="service-title">Medical Billing Compliance</h3>
+            <p class="service-desc">CMS 1500 and UB-04 claim review, CPT and ICD-10 coding accuracy audit, and payer-specific billing rule compliance across Medicare, Medicaid, and commercial insurers.</p>
+            <span class="service-tag">CMS 1500 · UB-04 · ICD-10 · CPT</span>
+          </div>
+
+          <div class="glass-card service-card reveal">
+            <div class="service-icon">📈</div>
+            <h3 class="service-title">RCM Dashboard Development</h3>
+            <p class="service-desc">Custom Power BI dashboards with Power Query integration for real-time denial tracking, payer performance monitoring, and visual storytelling for leadership reporting.</p>
+            <span class="service-tag">Power BI · Power Query · Real-Time</span>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- SPECIALTIES -->
+    <section id="specialties">
+      <div class="container">
+        <div class="specialties-wrapper">
+          <div class="reveal">
+            <p class="section-label">Clinical Coverage</p>
+            <h2 class="section-title">Every <span>Specialty.</span><br>Every Setting.</h2>
+            <div class="specialties-list" style="margin-top: 40px;">
+
+              <div class="glass-card specialty-item reveal">
+                <span class="specialty-dot"></span>
+                <span class="specialty-name">Inpatient Medicine (IP)</span>
+              </div>
+              <div class="glass-card specialty-item reveal">
+                <span class="specialty-dot blue"></span>
+                <span class="specialty-name">Outpatient Services (OP)</span>
+              </div>
+              <div class="glass-card specialty-item reveal">
+                <span class="specialty-dot violet"></span>
+                <span class="specialty-name">Psychiatry & Mental Health</span>
+              </div>
+              <div class="glass-card specialty-item reveal">
+                <span class="specialty-dot"></span>
+                <span class="specialty-name">Substance Abuse</span>
+              </div>
+              <div class="glass-card specialty-item reveal">
+                <span class="specialty-dot blue"></span>
+                <span class="specialty-name">Physical Therapy</span>
+              </div>
+              <div class="glass-card specialty-item reveal">
+                <span class="specialty-dot violet"></span>
+                <span class="specialty-name">Emergency Medicine</span>
+              </div>
+              <div class="glass-card specialty-item reveal">
+                <span class="specialty-dot"></span>
+                <span class="specialty-name">Outpatient Surgery</span>
+              </div>
+              <div class="glass-card specialty-item reveal">
+                <span class="specialty-dot blue"></span>
+                <span class="specialty-name">Laboratory Services</span>
+              </div>
+              <div class="glass-card specialty-item reveal">
+                <span class="specialty-dot violet"></span>
+                <span class="specialty-name">Radiology</span>
+              </div>
+              <div class="glass-card specialty-item reveal">
+                <span class="specialty-dot"></span>
+                <span class="specialty-name">Critical Access Hospitals</span>
+              </div>
+              <div class="glass-card specialty-item reveal" style="grid-column: span 2;">
+                <span class="specialty-dot blue"></span>
+                <span class="specialty-name">Rural Health Clinics (RHC)</span>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="glass-card specialties-info reveal">
+            <p class="section-label">Experience</p>
+            <h3 style="font-family:'Orbitron',monospace; font-size:1.3rem; margin-bottom:20px; color:var(--text-primary);">From Solo Clinics to <span style="color:var(--cyan)">Major Hospital Systems</span></h3>
+            <p>With 4+ years working across small independent practices and large hospital networks in the United States, I understand that every setting has its own billing complexity, payer mix, and denial patterns.</p>
+            <p>Whether you're a 2-physician PT clinic drowning in eligibility denials or a multi-department hospital system with complex UB-04 claim issues — I've seen it, analyzed it, and fixed it.</p>
+            <div class="coverage-tags">
+              <span class="coverage-tag">Medicare</span>
+              <span class="coverage-tag">Medicaid</span>
+              <span class="coverage-tag">United Healthcare</span>
+              <span class="coverage-tag">Aetna</span>
+              <span class="coverage-tag">BCBS</span>
+              <span class="coverage-tag">Cigna</span>
+              <span class="coverage-tag">Humana</span>
+              <span class="coverage-tag">Tricare</span>
+              <span class="coverage-tag">All 50 States</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- PROCESS -->
+    <section id="process">
+      <div class="container">
+        <div class="reveal" style="text-align:center; max-width:600px; margin: 0 auto 64px;">
+          <p class="section-label" style="justify-content:center;">How It Works</p>
+          <h2 class="section-title">From Data to <span>Recovered Revenue</span></h2>
+        </div>
+        <div class="process-steps">
+          <div class="glass-card process-step reveal">
+            <span class="step-number">STEP 01</span>
+            <span class="step-icon">🔍</span>
+            <h4 class="step-title">Data Collection</h4>
+            <p class="step-desc">Share your denial reports, AR aging data, and claim exports. I work with your existing formats — no new software needed.</p>
+          </div>
+          <div class="glass-card process-step reveal">
+            <span class="step-number">STEP 02</span>
+            <span class="step-icon">⚙️</span>
+            <h4 class="step-title">Deep Analysis</h4>
+            <p class="step-desc">Pivot table analysis to segment denials by payer, CPT code, denial reason, provider, and department to find the real patterns.</p>
+          </div>
+          <div class="glass-card process-step reveal">
+            <span class="step-number">STEP 03</span>
+            <span class="step-icon">📊</span>
+            <h4 class="step-title">Visual Report</h4>
+            <p class="step-desc">Power BI dashboard or Excel report with clear visualizations showing exactly where revenue is leaking and what's causing it.</p>
+          </div>
+          <div class="glass-card process-step reveal">
+            <span class="step-number">STEP 04</span>
+            <span class="step-icon">🚀</span>
+            <h4 class="step-title">Action Plan</h4>
+            <p class="step-desc">Concrete, prioritized steps your team can implement immediately — staff reallocation, workflow fixes, coding corrections.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- CONTACT -->
+    <section id="contact">
+      <div class="container">
+        <div class="reveal" style="text-align:center; max-width:600px; margin: 0 auto 64px;">
+          <p class="section-label" style="justify-content:center;">Get In Touch</p>
+          <h2 class="section-title">Let's Find Your <span>Hidden Revenue</span></h2>
+          <p style="font-size:0.95rem; color:var(--text-muted); line-height:1.8;">Start with a free 20-minute discovery call. Share your denial data and I'll show you what I can find.</p>
+        </div>
+        <div class="contact-wrapper">
+          <div class="glass-card contact-info reveal">
+            <h3>Ready to Stop Losing Revenue?</h3>
+            <p>Every denied claim is money your clinic has already earned. Let me help you recover it and prevent future losses with data-driven RCM consulting.</p>
+            <div class="contact-item">
+              <div class="contact-icon">📧</div>
+              <div>
+                <div class="contact-label">Email</div>
+                <div class="contact-value">hello@analyticalrcm.com</div>
+              </div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-icon">📍</div>
+              <div>
+                <div class="contact-label">Coverage</div>
+                <div class="contact-value">All 50 States — Remote</div>
+              </div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-icon">⚡</div>
+              <div>
+                <div class="contact-label">Response Time</div>
+                <div class="contact-value">Within 24 Hours</div>
+              </div>
+            </div>
+            <div style="margin-top:32px;">
+              <a href="mailto:hello@analyticalrcm.com" class="btn-primary" style="display:inline-block;">Email Me Directly</a>
+            </div>
+          </div>
+
+          <div class="glass-card contact-form-panel reveal">
+            <form onsubmit="handleSubmit(event)">
+              <div class="form-group">
+                <label class="form-label">Your Name</label>
+                <input type="text" class="form-input" placeholder="Dr. Jane Smith" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Clinic / Organization</label>
+                <input type="text" class="form-input" placeholder="Smith Physical Therapy" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Email Address</label>
+                <input type="email" class="form-input" placeholder="jane@yourclinic.com" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Specialty / Department</label>
+                <input type="text" class="form-input" placeholder="e.g. Physical Therapy, Psychiatry..." />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Tell Me About Your Challenge</label>
+                <textarea class="form-textarea" placeholder="Describe your denial or AR issue..."></textarea>
+              </div>
+              <button type="submit" class="form-submit">Send Message →</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <span class="footer-logo">ANALYTICAL RCM</span>
+    <span class="footer-copy">© 2025 Gokul Paramanandhan. All rights reserved.</span>
+  </footer>
+
+  <script>
+    // Custom cursor
+    const cursor = document.getElementById('cursor');
+    const cursorRing = document.getElementById('cursorRing');
+    let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
+
+    document.addEventListener('mousemove', e => {
+      mouseX = e.clientX; mouseY = e.clientY;
+      cursor.style.left = mouseX + 'px';
+      cursor.style.top = mouseY + 'px';
+    });
+
+    function animateRing() {
+      ringX += (mouseX - ringX) * 0.12;
+      ringY += (mouseY - ringY) * 0.12;
+      cursorRing.style.left = ringX + 'px';
+      cursorRing.style.top = ringY + 'px';
+      requestAnimationFrame(animateRing);
+    }
+    animateRing();
+
+    document.querySelectorAll('a, button, input, textarea').forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        cursor.style.transform = 'translate(-50%,-50%) scale(2)';
+        cursorRing.style.transform = 'translate(-50%,-50%) scale(1.5)';
+        cursorRing.style.borderColor = 'rgba(0,245,255,0.8)';
+      });
+      el.addEventListener('mouseleave', () => {
+        cursor.style.transform = 'translate(-50%,-50%) scale(1)';
+        cursorRing.style.transform = 'translate(-50%,-50%) scale(1)';
+        cursorRing.style.borderColor = 'rgba(0,245,255,0.5)';
+      });
+    });
+
+    // Particle canvas
+    const canvas = document.getElementById('particles');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    class Particle {
+      constructor() { this.reset(); }
+      reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.vx = (Math.random() - 0.5) * 0.3;
+        this.vy = (Math.random() - 0.5) * 0.3;
+        this.size = Math.random() * 1.5 + 0.5;
+        this.alpha = Math.random() * 0.4 + 0.1;
+        this.color = Math.random() > 0.5 ? '0,245,255' : '0,102,255';
+      }
+      update() {
+        this.x += this.vx; this.y += this.vy;
+        if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) this.reset();
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${this.color},${this.alpha})`;
+        ctx.fill();
+      }
+    }
+
+    for (let i = 0; i < 120; i++) particles.push(new Particle());
+
+    function drawConnections() {
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx*dx + dy*dy);
+          if (dist < 100) {
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.strokeStyle = `rgba(0,245,255,${0.06 * (1 - dist/100)})`;
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+          }
+        }
+      }
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => { p.update(); p.draw(); });
+      drawConnections();
+      requestAnimationFrame(animate);
+    }
+    animate();
+
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+          setTimeout(() => e.target.classList.add('visible'), i * 80);
+        }
+      });
+    }, { threshold: 0.1 });
+    reveals.forEach(r => observer.observe(r));
+
+    // Form submit
+    function handleSubmit(e) {
+      e.preventDefault();
+      const btn = e.target.querySelector('.form-submit');
+      btn.textContent = '✓ Message Sent!';
+      btn.style.background = 'linear-gradient(135deg, #00c853, #00e676)';
+      setTimeout(() => {
+        btn.textContent = 'Send Message →';
+        btn.style.background = '';
+        e.target.reset();
+      }, 3000);
+    }
+  </script>
+</body>
+</html>
