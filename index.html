@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytical RCM | Healthcare Revenue Analytics & Denial Recovery</title>
+    <meta name="description" content="Surgical RCM audits and denial recovery by Gokul Paramanandhan. We translate raw Excel sheets and outstanding AR logs into visual dashboards and actionable recovery strategies for US healthcare systems.">
+    <meta name="keywords" content="RCM, Revenue Cycle Management, Denial Management, Healthcare Data Analytics, Excel AR Audits, Government Payers, Commercial Payers, US Healthcare Consulting">
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:title" content="Analytical RCM | Healthcare Revenue Analytics & Denial Recovery">
+    <meta property="og:description" content="Actionable intelligence to recover outstanding claims. We analyze payer data patterns to stop revenue leakage at the source.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://analyticalrcm.com">
+
+    <!-- CSS stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- Humorous Loading Screen -->
+    <div class="loader-wrapper" id="loader-wrapper">
+        <div class="loader-content">
+            <div class="loader-title">Analytical RCM</div>
+            <div class="loader-phrase" id="loader-phrase">Appealing UnitedHealthcare denial #41,208 for Inpatient Sepsis...</div>
+            <div class="loader-bar-bg">
+                <div class="loader-bar-fill" id="loader-fill"></div>
+            </div>
+            <div class="loader-percentage" id="loader-percentage">0%</div>
+        </div>
+    </div>
+
+    <!-- Header Navigation -->
+    <header>
+        <div class="container nav-container">
+            <a href="#" class="logo">
+                <div class="logo-icon">A</div>
+                Analytical<span>RCM</span>
+            </a>
+            
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="#positioning">Our Difference</a></li>
+                    <li><a href="#expertise">Payer Metrics</a></li>
+                    <li><a href="#protocol">Our Protocol</a></li>
+                    <li><a href="#calculator">Leakage Calculator</a></li>
+                    <li><a href="#about">About Gokul</a></li>
+                    <li><a href="#faqs">FAQs</a></li>
+                </ul>
+            </nav>
+
+            <a href="https://forms.gle/YZnwhdjJ8PYEiRUW8" target="_blank" class="btn-nav" id="nav-cta">Book Consultation</a>
+
+            <button class="mobile-toggle" aria-label="Toggle Menu" id="mobile-menu-toggle">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="4" y1="12" x2="20" y2="12"></line>
+                    <line x1="4" y1="6" x2="20" y2="6"></line>
+                    <line x1="4" y1="18" x2="20" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- Mobile Navigation Drawer -->
+    <div class="mobile-nav-drawer" id="mobile-drawer" style="display: none; position: fixed; top: 80px; left: 0; width: 100%; height: calc(100vh - 80px); background: var(--bg-dark); z-index: 999; padding: 2rem; border-top: 1px solid var(--border-color); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);">
+        <ul style="list-style: none; display: flex; flex-direction: column; gap: 2rem; align-items: center; justify-content: center; height: 70%;">
+            <li><a href="#positioning" style="font-size: 1.25rem; font-weight: 600;" onclick="toggleMobileDrawer()">Our Difference</a></li>
+            <li><a href="#expertise" style="font-size: 1.25rem; font-weight: 600;" onclick="toggleMobileDrawer()">Payer Metrics</a></li>
+            <li><a href="#protocol" style="font-size: 1.25rem; font-weight: 600;" onclick="toggleMobileDrawer()">Our Protocol</a></li>
+            <li><a href="#calculator" style="font-size: 1.25rem; font-weight: 600;" onclick="toggleMobileDrawer()">Leakage Calculator</a></li>
+            <li><a href="#about" style="font-size: 1.25rem; font-weight: 600;" onclick="toggleMobileDrawer()">About Gokul</a></li>
+            <li><a href="#faqs" style="font-size: 1.25rem; font-weight: 600;" onclick="toggleMobileDrawer()">FAQs</a></li>
+            <li><a href="https://forms.gle/YZnwhdjJ8PYEiRUW8" target="_blank" class="btn-primary" style="width: 100%; text-align: center; margin-top: 1rem;">Book Consultation</a></li>
+        </ul>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content-wrapper reveal active">
+                <div class="hero-badge">
+                    US Healthcare RCM & Excel Analytics Specialist
+                </div>
+                <h1 class="hero-title">Insurance Companies Have <span class="highlight-gold">1,400 Reasons</span> To Deny Your Claims. We Only Need One to Get Them Paid.</h1>
+                <p class="hero-description">You have high-volume billing teams submitting clean claims. We audit the complex pile of denials they leave behind. Hospital systems, clinic owners, and billing VPs count on Gokul to turn outstanding AR into collected capital.</p>
+                <div class="hero-actions">
+                    <a href="https://forms.gle/YZnwhdjJ8PYEiRUW8" target="_blank" class="btn-primary" id="hero-primary-cta">
+                        Schedule Consultation
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                    </a>
+                    <a href="#calculator" class="btn-secondary" id="hero-secondary-cta">
+                        Calculate Leakage
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pain & Positioning Section -->
+    <section class="section" id="positioning">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-tag">Strategic Positioning</span>
+                <h2 class="section-title">We Are Not An Outsourced Billing Shop. <br><span class="highlight-gold">We Are Surgical RCM Auditing.</span></h2>
+                <p class="section-description">Let's be completely honest: you don't need another generic billing entry agency. You need someone who understands the exact coding loopholes, audits your raw Excel AR lists, and builds custom visual dashboards to claw back your cash.</p>
+            </div>
+
+            <div class="comparison-grid">
+                <!-- Traditional Billing -->
+                <div class="glass-panel comp-card traditional reveal">
+                    <span class="comp-badge">Generic Billing Outsource Shops</span>
+                    <div class="comp-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="8.5" cy="7" r="4"></circle>
+                            <line x1="18" y1="8" x2="22" y2="12"></line>
+                            <line x1="22" y1="8" x2="18" y2="12"></line>
+                        </svg>
+                    </div>
+                    <h3>Volume Processors</h3>
+                    <p style="margin-top: 0.5rem; color: var(--text-secondary);">Focuses on high-volume clean claim submission percentages. If a claim gets complicated, it is written off.</p>
+                    
+                    <ul class="comp-list">
+                        <li>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                            <span>Automatically writes off outstanding claims under $250 because "it's not worth the admin call."</span>
+                        </li>
+                        <li>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                            <span>Sends you dry, 500-row Excel spreadsheets that require a data science degree to interpret.</span>
+                        </li>
+                        <li>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                            <span>Repeats standard, automated appeal letters that insurance bots instantly reject.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Analytical RCM Consultancy -->
+                <div class="glass-panel comp-card consultancy reveal">
+                    <span class="comp-badge">Analytical RCM Advantage</span>
+                    <div class="comp-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="20" x2="18" y2="10"></line>
+                            <line x1="12" y1="20" x2="12" y2="4"></line>
+                            <line x1="6" y1="20" x2="6" y2="14"></line>
+                        </svg>
+                    </div>
+                    <h3>Specialized RCM Analysts</h3>
+                    <p style="margin-top: 0.5rem; color: var(--text-secondary);">An intersection of technical data analysis and ground-level clinical appeals. We target systematic leakage.</p>
+                    
+                    <ul class="comp-list">
+                        <li>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            <span>Links raw EDI transactions, billing logs, and Excel AR reports to trace systematic gaps.</span>
+                        </li>
+                        <li>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            <span>Proven track record resolving complex claims with both Government and Commercial payers.</span>
+                        </li>
+                        <li>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            <span>Creates clean visual dashboards showing exactly which payers are holding your capital.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Facility Domains Showcase -->
+    <section class="section" id="expertise">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-tag">Finance Audit Dashboard</span>
+                <h2 class="section-title">Specialty-Specific Payer Behaviors</h2>
+                <p class="section-description">Different specialties trigger different denial algorithms. Here is the real-world financial data on how specific payers target your revenue cycles.</p>
+            </div>
+
+            <div class="expertise-showcase reveal">
+                <!-- Vertical Tabs Selector -->
+                <div class="expertise-tabs">
+                    <button class="tab-btn active" data-tab="ip">
+                        <h4>Inpatient (IP)</h4>
+                        <span>DRG</span>
+                    </button>
+                    <button class="tab-btn" data-tab="op">
+                        <h4>Outpatient (OP)</h4>
+                        <span>APC</span>
+                    </button>
+                    <button class="tab-btn" data-tab="er">
+                        <h4>Emergency Room (ER)</h4>
+                        <span>EMTALA</span>
+                    </button>
+                    <button class="tab-btn" data-tab="behavioral">
+                        <h4>Behavioral Health</h4>
+                        <span>Prior Auth</span>
+                    </button>
+                    <button class="tab-btn" data-tab="cah">
+                        <h4>Critical Access (CAH)</h4>
+                        <span>Cost-Based</span>
+                    </button>
+                    <button class="tab-btn" data-tab="rhc">
+                        <h4>Rural Health (RHC)</h4>
+                        <span>Encounter Rate</span>
+                    </button>
+                    <button class="tab-btn" data-tab="pt">
+                        <h4>Physical Therapy (PT)</h4>
+                        <span>CPT Limits</span>
+                    </button>
+                </div>
+
+                <!-- Tab Content Card -->
+                <div class="glass-panel expertise-content-card">
+                    <!-- Tab: Inpatient -->
+                    <div class="tab-pane active" id="pane-ip">
+                        <div class="pane-header">
+                            <div>
+                                <h3 class="pane-title">Inpatient (IP) DRG Audits</h3>
+                                <p style="color: var(--text-muted);">DRG Downgrades & Severity Level Auditing</p>
+                            </div>
+                            <span class="pane-facility-tag">Target Payer: UnitedHealthcare</span>
+                        </div>
+                        <div class="pane-body">
+                            <div class="audit-metrics-row">
+                                <div class="metric-data-box">
+                                    <span class="metric-data-label">UHC Sepsis/Pneumonia Denial Rate</span>
+                                    <div class="metric-data-value">18.2%</div>
+                                </div>
+                                <div class="metric-data-box" style="border-color: rgba(254, 255, 211, 0.1);">
+                                    <span class="metric-data-label">Auditing Focus</span>
+                                    <span style="font-weight: 700; font-size: 1.15rem; color: var(--color-accent);">Clinical Validation MCC/CC</span>
+                                </div>
+                            </div>
+                            <p>Inpatient claims represent your highest-dollar assets. UnitedHealthcare's algorithms target DRG (Diagnosis-Related Group) validations, clinical documentation specificity, and readmission criteria to downgrade MCC/CC severity levels and underpay acute care hospitals.</p>
+                            <div class="pane-challenges-grid">
+                                <div class="challenge-box">
+                                    <h5>Payer Behavior</h5>
+                                    <p style="font-size: 0.95rem; color: var(--text-secondary);">UHC's bots retroactively apply clinical criteria definitions, essentially assuming acute sepsis magically resolves itself on day 3 without ICU intervention.</p>
+                                </div>
+                                <div class="solution-box">
+                                    <h5>Our Recovery Strategy</h5>
+                                    <p style="font-size: 0.95rem; color: var(--text-secondary);">Extracting lab data (lactic acid trends) and ICU progress records directly into custom Excel audits to build clinical appeals that override automated rejections.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab: Outpatient -->
+                    <div class="tab-pane" id="pane-op">
+                        <div class="pane-header">
+                            <div>
+                                <h3 class="pane-title">Outpatient (OP) Modifier Audits</h3>
+                                <p style="color: var(--text-muted);">CCI Edits & Procedure Code Bundling</p>
+                            </div>
+                            <span class="pane-facility-tag">Target Payer: Aetna</span>
+                        </div>
+                        <div class="pane-body">
+                            <div class="audit-metrics-row">
+                                <div class="metric-data-box">
+                                    <span class="metric-data-label">Aetna Modifier 25/59 Denial Rate</span>
+                                    <div class="metric-data-value">22.4%</div>
+                                </div>
+                                <div class="metric-data-box" style="border-color: rgba(254, 255, 211, 0.1);">
+                                    <span class="metric-data-label">Auditing Focus</span>
+                                    <span style="font-weight: 700; font-size: 1.15rem; color: var(--color-accent);">CPT Unbundling Edits</span>
+                                </div>
+                            </div>
+                            <p>Outpatient claims involve complex National Correct Coding Initiative (NCCI) edits and medically unlikely edits. Payers frequently reject concurrent procedures and modifier applications to test if billing teams will write off the balances.</p>
+                            <div class="pane-challenges-grid">
+                                <div class="challenge-box">
+                                    <h5>Payer Behavior</h5>
+                                    <p style="font-size: 0.95rem; color: var(--text-secondary);">Aetna treats modifiers like decorative punctuation, programmatically denying overlapping codes on high-volume outpatient procedures.</p>
+                                </div>
+                                <div class="solution-box">
+                                    <h5>Our Recovery Strategy</h5>
+                                    <p style="font-size: 0.95rem; color: var(--text-secondary);">Cross-linking raw procedure logs with documentation records in clean Excel dashboards to prove modifier validity and secure procedure payments.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab: Emergency Room -->
+                    <div class="tab-pane" id="pane-er">
+                        <div class="pane-header">
+                            <div>
+                                <h3 class="pane-title">Emergency Room (ER) Acuity Auditing</h3>
+                                <p style="color: var(--text-muted);">EMTALA Regulations & Acuity Level Verification</p>
+                            </div>
+                            <span class="pane-facility-tag">Target Payer: Blue Cross Blue Shield</span>
+                        </div>
+                        <div class="pane-body">
+                            <div class="audit-metrics-row">
+                                <div class="metric-data-box">
+                                    <span class="metric-data-label">BCBS Level 5 Downcoding Rate</span>
+                                    <div class="metric-data-value">15.1%</div>
+                                </div>
+                                <div class="metric-data-box" style="border-color: rgba(254, 255, 211, 0.1);">
+                                    <span class="metric-data-label">Auditing Focus</span>
+                                    <span style="font-weight: 700; font-size: 1.15rem; color: var(--color-accent);">E/M Level Downgrades</span>
+                                </div>
+                            </div>
+                            <p>Emergency departments operate under strict federal guidelines (like the Prudent Layperson Standard). Despite this, commercial payers use automated adjudication tools to downgrade high-acuity level emergency codes.</p>
+                            <div class="pane-challenges-grid">
+                                <div class="challenge-box">
+                                    <h5>Payer Behavior</h5>
+                                    <p style="font-size: 0.95rem; color: var(--text-secondary);">According to BCBS, a patient presenting with sudden crushing chest pain is simply experiencing "mild anxiety" if the final discharge diagnosis is indigestion, downcoding your Level 5 rate.</p>
+                                </div>
+                                <div class="solution-box">
+                                    <h5>Our Recovery Strategy</h5>
+                                    <p style="font-size: 0.95rem; color: var(--text-secondary);">Auditing triage logs and presenting symptoms in appeal files to force BCBS to align payments with federal Prudent Layperson standards.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab: Behavioral Health -->
+                    <div class="tab-pane" id="pane-behavioral">
+                        <div class="pane-header">
+                            <div>
+                                <h3 class="pane-title">Behavioral Health Prior-Auth Audits</h3>
+                                <p style="color: var(--text-muted);">Concurrent Reviews & Authorization Verification</p>
+                            </div>
+                            <span class="pane-facility-tag">Target Payer: Cigna</span>
+                        </div>
+                        <div class="pane-body">
+                            <div class="audit-metrics-row">
+                                <div class="metric-data-box">
+                                    <span class="metric-data-label">Cigna Prior-Auth Denial Rate</span>
+                                    <div class="metric-data-value">30.5%</div>
+                                </div>
+                                <div class="metric-data-box" style="border-color: rgba(254, 255, 211, 0.1);">
+                                    <span class="metric-data-label">Auditing Focus</span>
+                                    <span style="font-weight: 700; font-size: 1.15rem; color: var(--color-accent);">Medical Necessity Cutoffs</span>
+                                </div>
+                            </div>
+                            <p>Behavioral health services suffer from highly restrictive networks and authorization thresholds. Prior authorization code mismatches and medical necessity challenges account for the vast majority of unpaid psychiatric balances.</p>
+                            <div class="pane-challenges-grid">
+                                <div class="challenge-box">
+                                    <h5>Payer Behavior</h5>
+                                    <p style="font-size: 0.95rem; color: var(--text-secondary);">Cigna believes behavioral health recovery follows a strict 3-day corporate timeline, retroactively denying residential therapy extensions.</p>
+                                </div>
+                                <div class="solution-box">
+                                    <h5>Our Recovery Strategy</h5>
+                                    <p style="font-size: 0.95rem; color: var(--text-secondary);">Translating daily clinical records and standardized outcome scales (PHQ-9) into visual necessity arguments that commercial adjusters cannot dispute.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab: CAH -->
+                    <div class="tab-pane" id="pane-cah">
+                        <div class="pane-header">
+                            <div>
+                                <h3 class="pane-title">Critical Access (CAH) Fee Audits</h3>
+                                <p style="color: var(--text-muted);">Medicare Cost-Based Reimbursement Protections</p>
+                            </div>
+                            <span class="pane-facility-tag">Target Payer: Humana (Medicare Advantage)</span>
+                        </div>
+                        <div class="pane-body">
+                            <div class="audit-metrics-row">
+                                <div class="metric-data-box">
+                                    <span class="metric-data-label">Humana Fee-Grid Underpayment Rate</span>
+                                    <div class="metric-data-value">12.3%</div>
+                                </div>
+                                <div class="metric-data-box" style="border-color: rgba(254, 255, 211, 0.1);">
+                                    <span class="metric-data-label">Auditing Focus</span>
+                                    <span style="font-weight: 700; font-size: 1.15rem; color: var(--color-accent);">Rural HMO Pricing Models</span>
+                                </div>
+                            </div>
+                            <p>Critical Access rural hospitals qualify for federal cost-based Medicare reimbursement rates. Payer pricing systems frequently attempt to wrap these claims into standard commercial HMO grids, underpaying the facility.</p>
+                            <div class="pane-challenges-grid">
+                                <div class="challenge-box">
+                                    <h5>Payer Behavior</h5>
+                                    <p style="font-size: 0.95rem; color: var(--text-secondary);">Humana pricing systems conveniently forget that Critical Access rural hospitals operate on federal cost-based rates, paying standard out-of-network rates instead.</p>
+                                </div>
+                                <div class="solution-box">
+                                    <h5>Our Recovery Strategy</h5>
+                                    <p style="font-size: 0.95rem; color: var(--text-secondary);">Validating claims against cost-based contract matrices and filing regulatory complaints to force pricing alignment.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab: RHC -->
+                    <div class="tab-pane" id="pane-rhc">
+                        <div class="pane-header">
+                            <div>
+                                <h3 class="pane-title">Rural Health Clinic (RHC) Encounter Audits</h3>
+                                <p style="color: var(--text-muted);">All-Inclusive Rate (AIR) Pricing Verification</p>
+                            </div>
+                            <span class="pane-facility-tag">Target Payer: Medicaid Managed Care</span>
+                        </div>
+                        <div class="pane-body">
+                            <div class="audit-metrics-row">
+                                <div class="metric-data-box">
+                                    <span class="metric-data-label">Medicaid AIR Form Rejection Rate</span>
+                                    <div class="metric-data-value">20.8%</div>
+                                </div>
+                                <div class="metric-data-box" style="border-color: rgba(254, 255, 211, 0.1);">
+                                    <span class="metric-data-label">Auditing Focus</span>
+                                    <span style="font-weight: 700; font-size: 1.15rem; color: var(--color-accent);">Encounter Rate Splitting</span>
+                                </div>
+                            </div>
+                            <p>Rural Health Clinics rely on an All-Inclusive Rate per encounter. Underpayment occurs when payers adjudicate individual CPT lines under standard fee schedules or fail to process encounter adjustments.</p>
+                            <div class="pane-challenges-grid">
+                                <div class="challenge-box">
+                                    <h5>Payer Behavior</h5>
+                                    <p style="font-size: 0.95rem; color: var(--text-secondary);">Medicaid Managed plans split, fragment, and reject encounter rates because their claims systems operate on code structures from 2008.</p>
+                                </div>
+                                <div class="solution-box">
+                                    <h5>Our Recovery Strategy</h5>
+                                    <p style="font-size: 0.95rem; color: var(--text-secondary);">Auditing provider credentialing logs, verifying encounter forms in Excel, and forcing Medicaid plans to reprocess payments under encounter rules.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab: PT -->
+                    <div class="tab-pane" id="pane-pt">
+                        <div class="pane-header">
+                            <div>
+                                <h3 class="pane-title">Physical Therapy (PT) Cap Audits</h3>
+                                <p style="color: var(--text-muted);">Medicare Part B KX Modifier Caps</p>
+                            </div>
+                            <span class="pane-facility-tag">Target Payer: Medicare Part B</span>
+                        </div>
+                        <div class="pane-body">
+                            <div class="audit-metrics-row">
+                                <div class="metric-data-box">
+                                    <span class="metric-data-label">Medicare Part B KX Cap Denial Rate</span>
+                                    <div class="metric-data-value">25.3%</div>
+                                </div>
+                                <div class="metric-data-box" style="border-color: rgba(254, 255, 211, 0.1);">
+                                    <span class="metric-data-label">Auditing Focus</span>
+                                    <span style="font-weight: 700; font-size: 1.15rem; color: var(--color-accent);">Cap Limit Overrides</span>
+                                </div>
+                            </div>
+                            <p>Therapy clinics face rigid Medicare therapeutic benefit caps. Claims exceeding the threshold require KX modifier documentation, which Medicare systems frequently reject without detailed audits.</p>
+                            <div class="pane-challenges-grid">
+                                <div class="challenge-box">
+                                    <h5>Payer Behavior</h5>
+                                    <p style="font-size: 0.95rem; color: var(--text-secondary);">Medicare systems assume patients stop needing rehabilitation the exact day their cumulative therapy bill crosses a statutory $2,230 limit.</p>
+                                </div>
+                                <div class="solution-box">
+                                    <h5>Our Recovery Strategy</h5>
+                                    <p style="font-size: 0.95rem; color: var(--text-secondary);">Auditing CPT caps and objective functional records in custom Excel sheets to build cap-override appeals that Medicare reviewers must approve.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Our 4-Step Surgical Recovery Protocol -->
+    <section class="section" id="protocol" style="background: rgba(123, 24, 24, 0.3);">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-tag">Our Workflow</span>
+                <h2 class="section-title">The Analytical Recovery Protocol</h2>
+                <p class="section-description">How we actually audit your accounts and claw back your stuck funds—broken down simply, without the corporate filler.</p>
+            </div>
+
+            <div class="features-grid">
+                <!-- Step 1 -->
+                <div class="glass-panel feature-card reveal">
+                    <span class="comp-badge" style="color: var(--color-accent); font-weight: 800; border-color: rgba(254, 255, 211, 0.15); background: rgba(254, 255, 211, 0.05); margin-bottom: 1.5rem;">Phase 01</span>
+                    <h3 class="feature-title">The HIPAA-Relaxed Excel Drop</h3>
+                    <p class="feature-desc">We need your transactions, not your patient secrets. Export your outstanding AR logs or billing files to Excel. Worried about PHI (as you should be)? Simply delete the columns containing patient names and Social Security Numbers. We don't want them. We just want the raw transaction logs.</p>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="glass-panel feature-card reveal">
+                    <span class="comp-badge" style="color: var(--color-accent); font-weight: 800; border-color: rgba(254, 255, 211, 0.15); background: rgba(254, 255, 211, 0.05); margin-bottom: 1.5rem;">Phase 02</span>
+                    <h3 class="feature-title">Variable Interrogation</h3>
+                    <p class="feature-desc">We run custom audit models to cross-reference data columns. We analyze the relationships between data points to map exactly:
+                    <br>• Which CPT codes are getting denied by which payers?
+                    <br>• What Diagnosis (DX) is triggering specific rejections?
+                    <br>• Which level of care is dragging out your AR Days?
+                    </p>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="glass-panel feature-card reveal">
+                    <span class="comp-badge" style="color: var(--color-accent); font-weight: 800; border-color: rgba(254, 255, 211, 0.15); background: rgba(254, 255, 211, 0.05); margin-bottom: 1.5rem;">Phase 03</span>
+                    <h3 class="feature-title">The 4-Question Audit Report</h3>
+                    <p class="feature-desc">Instead of a massive, unreadable spreadsheet, we deliver an intuitive visual dashboard answering exactly four questions:
+                    <br><strong>1. What happened?</strong> (How much money is stuck)
+                    <br><strong>2. Why did it happen?</strong> (The payer's automated rules)
+                    <br><strong>3. How do we prevent this?</strong> (Stopping future leakage)
+                    <br><strong>4. How do we tackle the mess now?</strong> ( Clawn-back strategy)
+                    </p>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="glass-panel feature-card reveal">
+                    <span class="comp-badge" style="color: var(--color-accent); font-weight: 800; border-color: rgba(254, 255, 211, 0.15); background: rgba(254, 255, 211, 0.05); margin-bottom: 1.5rem;">Phase 04</span>
+                    <h3 class="feature-title">Choose Your Recovery Fighter</h3>
+                    <p class="feature-desc">Once we hand over the custom strategy, you choose how to deploy it:
+                    <br><strong>Option A (Self-Execute):</strong> Give the blueprint to your current billing team and let them run with the exact appeal steps.
+                    <br><strong>Option B (Deploy Specialists):</strong> If your team is overwhelmed or lacks clinical appeal experience, we will recruit and manage RCM specialists specifically to resolve your exact payer issue.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Denial & Leakage Interactive Calculator -->
+    <section class="section" id="calculator">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-tag">Interactive Diagnostic</span>
+                <h2 class="section-title">Analyze Your Revenue Leakage</h2>
+                <p class="section-description">Input your numbers below to reveal how much revenue is sliding into payer write-offs—and how much we can help you claw back.</p>
+            </div>
+
+            <div class="calc-container reveal">
+                <!-- Inputs Glass Panel -->
+                <div class="glass-panel calc-inputs">
+                    <h3 class="calc-title">Calculator Parameters</h3>
+                    
+                    <!-- NPR Input -->
+                    <div class="input-group">
+                        <div class="input-label-row">
+                            <label for="npr-range">Annual Net Patient Revenue (NPR)</label>
+                            <span class="input-value-badge" id="npr-val">$10,000,000</span>
+                        </div>
+                        <input type="range" min="1000000" max="100000000" step="500000" value="10000000" class="range-slider" id="npr-range">
+                    </div>
+
+                    <!-- Denial Rate Input -->
+                    <div class="input-group">
+                        <div class="input-label-row">
+                            <label for="denial-range">Average Clean Claim Denial Rate</label>
+                            <span class="input-value-badge" id="denial-val">8%</span>
+                        </div>
+                        <input type="range" min="1" max="25" step="0.5" value="8" class="range-slider" id="denial-range">
+                    </div>
+
+                    <!-- Facility Type Input -->
+                    <div class="input-group">
+                        <div class="input-label-row">
+                            <label>Primary Facility Specialization</label>
+                        </div>
+                        <div class="radio-grid">
+                            <div class="radio-card">
+                                <input type="radio" id="fac-ip" name="calc-facility" value="ip" checked>
+                                <label for="fac-ip" class="radio-card-label">Inpatient Hospital</label>
+                            </div>
+                            <div class="radio-card">
+                                <input type="radio" id="fac-op" name="calc-facility" value="op">
+                                <label for="fac-op" class="radio-card-label">Outpatient Clinic</label>
+                            </div>
+                            <div class="radio-card">
+                                <input type="radio" id="fac-er" name="calc-facility" value="er">
+                                <label for="fac-er" class="radio-card-label">Emergency Care</label>
+                            </div>
+                            <div class="radio-card">
+                                <input type="radio" id="fac-behavioral" name="calc-facility" value="behavioral">
+                                <label for="fac-behavioral" class="radio-card-label">Behavioral Health</label>
+                            </div>
+                            <div class="radio-card">
+                                <input type="radio" id="fac-cah" name="calc-facility" value="cah">
+                                <label for="fac-cah" class="radio-card-label">Rural Hospital</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results Column -->
+                <div class="calc-results">
+                    <!-- Leakage Metrics Card -->
+                    <div class="glass-panel result-card leakage">
+                        <span class="result-label">Estimated Annual Revenue Leaked</span>
+                        <div class="result-value" id="leakage-val">$800,000</div>
+                        <p class="result-helper">Unpaid, written-off, or outstanding claims that sit in aging AR buckets beyond timely filing limits.</p>
+                    </div>
+
+                    <!-- Recovery Potential Card -->
+                    <div class="glass-panel result-card recovery">
+                        <span class="result-label">Target Recovery Potential (65%)</span>
+                        <div class="result-value" id="recovery-val">$520,000</div>
+                        <p class="result-helper">Recoverable cash flow using targeted data audits, documentation reviews, and structured clinical appeals.</p>
+                    </div>
+
+                    <!-- Custom Action List Card -->
+                    <div class="glass-panel calc-action-card">
+                        <h4 id="action-facility-name">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                            </svg>
+                            Immediate Action Checklist
+                        </h4>
+                        <ul class="calc-action-list" id="calc-checklist">
+                            <li>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                                <span>Audit historical DRG shifts to locate downcoded diagnosis patterns.</span>
+                            </li>
+                            <li>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                                <span>Isolate clinical authorization denials by payer to identify policy anomalies.</span>
+                            </li>
+                        </ul>
+                        <a href="https://forms.gle/YZnwhdjJ8PYEiRUW8" target="_blank" class="btn-primary" style="width: 100%; justify-content: center; font-size: 0.95rem;">
+                            Claw Back Your Revenue
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ground Level Execution meets Data Analytics -->
+    <section class="section" id="capabilities">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-tag">Core Competencies</span>
+                <h2 class="section-title">Where Ground-Level Billing <br><span class="highlight-gold">Meets Advanced Analytics</span></h2>
+                <p class="section-description">Traditional data consulting stops at spreadsheets. Traditional billing stops at submissions. We operate at their strategic intersection.</p>
+            </div>
+
+            <div class="features-grid">
+                <!-- Ground-Level Execution -->
+                <div class="glass-panel feature-card reveal">
+                    <h3 class="feature-title">Ground-Level AR Recovery</h3>
+                    <p class="feature-desc">Hands-on RCM experience addressing payer pushback. We know the processes required to turn a denial back into cash.</p>
+                    <ul class="feature-points">
+                        <li>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            <span><strong>Denial Management:</strong> Deep root-cause tagging, appeal submissions, and tracking.</span>
+                        </li>
+                        <li>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            <span><strong>AR Follow-Up:</strong> Tactical phone follow-up and claims escalation to resolution.</span>
+                        </li>
+                        <li>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            <span><strong>Appeals & Rejections:</strong> Custom, clinical appeal letters that override automated denials.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Executive Analytics -->
+                <div class="glass-panel feature-card reveal">
+                    <h3 class="feature-title">AR Auditing & Visual Dashboards</h3>
+                    <p class="feature-desc">Transforming complex Excel sheets, raw claims logs, and aging AR lists into simple, actionable visual dashboards.</p>
+                    <ul class="feature-points">
+                        <li>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            <span><strong>Visual Dashboards:</strong> Building intuitive summaries that highlight denial trends at a glance.</span>
+                        </li>
+                        <li>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            <span><strong>Excel & AR Audits:</strong> Mining raw financial reports to spot missed timelines and unpaid codes.</span>
+                        </li>
+                        <li>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            <span><strong>Payer Pattern Auditing:</strong> Mapping trends for both Government and Commercial payers.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Authority Profile Section -->
+    <section class="section" id="about">
+        <div class="container">
+            <div class="glass-panel profile-panel reveal">
+                <!-- Left: Profile Avatar Placeholder Card -->
+                <div class="profile-avatar-container">
+                    <div class="profile-avatar">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                        <div class="profile-avatar-label">Analytical RCM</div>
+                    </div>
+                </div>
+
+                <!-- Right: Profile Info -->
+                <div class="profile-details">
+                    <span class="section-tag" style="text-align: left; margin: 0;">Meet the Founder</span>
+                    <h2 class="profile-name">Gokul Paramanandhan</h2>
+                    <h3 class="profile-title">Lead RCM Analytics Consultant</h3>
+                    
+                    <p class="profile-bio">With over 4 years of hands-on experience managing outstanding AR, Gokul has navigated complex denial recovery across both Government (Medicare, Medicaid) and Commercial payers for the largest US hospitals, healthcare systems, and small clinics. His background represents a rare intersection: ground-level AR denial management meets modern data analysis.</p>
+                    
+                    <p class="profile-bio">He translates raw Excel exports, aging AR reports, and EDI logs into visual, intuitive dashboards that make immediate sense to leadership. Rather than offering outsourced billing, Analytical RCM audits your current accounts and delivers a clear blueprint to recover unpaid claims.</p>
+
+                    <div class="profile-stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-number">4+</div>
+                            <div class="stat-label">Years Experience</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">7+</div>
+                            <div class="stat-label">Facility Types</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">65%+</div>
+                            <div class="stat-label">Recovery Rate</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="section" id="faqs">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-tag">Frequently Asked Questions</span>
+                <h2 class="section-title">Strategic Insights</h2>
+                <p class="section-description">Clear answers on how our consulting framework integrates with your healthcare business.</p>
+            </div>
+
+            <div class="faq-accordion reveal">
+                <!-- FAQ 1 -->
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>Are you a medical billing company from India?</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </button>
+                    <div class="faq-answer">
+                        <p>No. We are not an outsourced billing agency. We do not handle daily charge entries or simple patient billing services. We are RCM analytics consultants. We audit historical payer datasets, identify systemic denial anomalies, and deliver clinical appeal blueprints to recover stuck revenue.</p>
+                    </div>
+                </div>
+
+                <!-- FAQ 2 -->
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>How does your service coordinate with our existing billing team?</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </button>
+                    <div class="faq-answer">
+                        <p>We work alongside your in-house billers or external agency. Standard billing shops focus on clean claim submission metrics. We step in to audit the complex denials that require advanced coding analysis, contract reviews, and structured clinical appeals.</p>
+                    </div>
+                </div>
+
+                <!-- FAQ 3 -->
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>What information do you need to conduct a revenue audit?</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </button>
+                    <div class="faq-answer">
+                        <p>We work with standard reports you can easily pull from your system—including aging AR lists in Excel, raw billing logs, and EDI files. We process this data to build custom visual dashboards highlighting exactly where your recovery strategy should target. All analysis is strictly HIPAA-compliant.</p>
+                    </div>
+                </div>
+
+                <!-- FAQ 4 -->
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>What is your typical recovery timeline?</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Initial auditing takes 10 to 14 business days. Payer re-adjudication cycles typically take 30 to 45 days from appeal submission before the recovered funds are deposited.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Booking CTA Banner -->
+    <section class="section" id="booking" style="position: relative; z-index: 5;">
+        <div class="container">
+            <div class="glass-panel cta-banner reveal">
+                <h2 class="cta-title">Stop Writing Off Your <br><span class="highlight-gold">Hard-Earned Payer Claims</span></h2>
+                <p class="cta-desc">Work directly with a US Revenue Cycle specialist. Let's analyze your AR inventory, isolate systematic payer bottlenecks, and design a custom blueprint to recover your revenue.</p>
+                
+                <a href="https://forms.gle/YZnwhdjJ8PYEiRUW8" target="_blank" class="btn-primary" id="bottom-cta" style="font-size: 1.1rem; padding: 1.25rem 2.5rem;">
+                    Schedule Free Consultation
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                </a>
+
+                <div class="contact-row">
+                    <div class="contact-badge">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                            <polyline points="22,6 12,13 2,6"></polyline>
+                        </svg>
+                        hello@analyticalrcm.com
+                    </div>
+                    <div class="contact-badge">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="2" y1="12" x2="22" y2="12"></line>
+                            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                        </svg>
+                        Based in United States
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <div class="footer-logo">
+                        <div class="logo-icon" style="width: 32px; height: 32px; font-size: 1rem;">A</div>
+                        Analytical<span>RCM</span>
+                    </div>
+                    <p class="footer-desc">Professional healthcare analytics and specialized denial recovery services for hospital networks, clinics, and billing groups across the United States.</p>
+                </div>
+
+                <div class="footer-links-group">
+                    <ul class="footer-list">
+                        <li class="footer-list-title">Consultancy</li>
+                        <li><a href="#positioning">Our Difference</a></li>
+                        <li><a href="#expertise">Payer Metrics</a></li>
+                        <li><a href="#protocol">Our Protocol</a></li>
+                        <li><a href="#calculator">Leakage Calculator</a></li>
+                    </ul>
+                    <ul class="footer-list">
+                        <li class="footer-list-title">Credentials</li>
+                        <li><a href="#about">Gokul Paramanandhan</a></li>
+                        <li><a href="#capabilities">Core Competencies</a></li>
+                        <li><a href="#faqs">FAQ</a></li>
+                    </ul>
+                    <ul class="footer-list">
+                        <li class="footer-list-title">Contact</li>
+                        <li><a href="mailto:hello@analyticalrcm.com">hello@analyticalrcm.com</a></li>
+                        <li><a href="https://forms.gle/YZnwhdjJ8PYEiRUW8" target="_blank">Book Consultation</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p class="copyright">&copy; 2026 Analytical RCM. All rights reserved. HIPAA Compliant Auditing.</p>
+                <ul class="legal-links">
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+
+    <!-- App JS Code -->
+    <script src="app.js"></script>
+</body>
+</html>
